@@ -1,0 +1,70 @@
+{% extends "base.html" %} {% block content %}
+ <div class="row">
+    <br><br><br><br><br><br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-6"></div>
+            <div class="col-md-2" align="center"><p></p>
+            <input class="btn btn-group-lg btn-primary" type="button" id="btn_export" name="btn_export" value="Export" />
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8" id="showResults">
+                {% for file in context  %}
+                <div class='myresult'>&nbsp;&nbsp;<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png" alt=""> &nbsp;
+                    <b><a class='myresult_links' href='https://drive.google.com/open?id={{ file.id }}' target='_blank'>"{{ file.name }}"</a>
+                    </b>
+                </div><br>
+                <!--<a href="https://drive.google.com/open?id={{ file.id }}" target="_blank">-->
+                    <!--{{ file.name }}-->
+                <!--</a><br> -->
+                {% endfor %}
+                {% if not context %}
+                <div align="center"><p>files are are up to date..</p></div>
+                {% endif %}
+
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="loader"></div>
+    </div>
+</div>
+<script>
+    $('#btn_export').show()
+    $("#btn_export").click(function(e){
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+        $('#myModal').modal('show');
+        e.preventDefault();
+         $.ajax({
+            type: "GET",
+            url: "/sync_process/",
+            data :{                              
+                },
+            success: function(res) {
+                debugger;
+                // alert('done');
+                var myNode = document.getElementById("showResults");
+                myNode.innerHTML = '';
+                $("#showResults").append('<p align="center">Total '+res.count+' records are synced.. '+res.unable_to_convert+' records are unable to convert....</p>');
+                $('#btn_export').hide()
+                $('#myModal').modal('hide');
+                
+            },
+            error: function(res) {
+                alert('error');
+                $('#myModal').modal('hide');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+<div class="col-md-4"></div>
+<div class="col-md-4"><br><br><br><br><br><br><br>
+    <form class="form-signin"  method="post" accept-charset="utf-8" >{% csrf_token %}
+        <div class="text-center"><i class="fa fa-user fa-5x" aria-hidden="true"></i>
+            <h2 class="form-signin-heading">Please Log In</h2>
+        </div>
+        <button class="btn-block btncls" type="submit"><a href="{% url "social:begin" "google-oauth2" %}" style="text-decoration: none; color:#fff;">Google+ Sign In</a></button>
+        <div>
+          </div>
+    </form>
+</div>
+<div class="col-md-4"></div>
+{% endblock %}

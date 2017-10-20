@@ -1,0 +1,102 @@
+{% extends "base.html" %} {% block content %}
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top container-fluid">
+        <div class="col-md-3 "><br>
+            <a href="#" class="brand-logo"><img class="logo-img" src="https://gramener.com/website_static/img/logo-main.png" style="max-width:150px;"></a>
+        </div>
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-1"><br>
+        </div>
+        <div class="col-md-3">
+            <div align="right"><br>
+                <p>
+                   <h5 style="color: #f5f5ff;"> {% if user and not user.is_anonymous %} 
+                    Welcome <b>{{ user.get_full_name|default:user.username }}&nbsp;!</b>
+                    <p><b><a href="/logout" style="text-decoration: none !important; color: #f5f5ff;">Logout</a></b></p>
+                    {% else %} I don’t think we’ve
+                    met before. 
+                    {% endif %}</h5>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+    <div class="row">
+        <br><br><br><br>
+        <div class="container-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-8" ><p>Indian government carries out census every decade. This dataset contains information from the
+                    2011 census with district level granularity on population, gender, literacy, socioeconomic status
+                    (electricity, mobiles, Internet) among a lot of other dimensions.</p>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="container-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-8" >Q: Create a geographic map of states with low literacy rates.<br>
+                Ans:  <a href="/india_census" style="text-decoration: none !important; color: #20186f;">geographic map</a>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="container-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-8" >Find out most similar districts in Bihar and Tamil Nadu. Similarity can be based on any of
+                    the columns from the data.<br>
+                    Ans:  <a href="/similar_districts" style="text-decoration: none !important; color: #20186f;">Similar districts in Bihar and Tamil Nadu</a>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="container-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-8" >How does the mobile penetration vary in regions (districts or states) with high or low
+                    agricultural workers?<br>
+                        Ans:  <a href="/mobile_penetration" style="text-decoration: none !important; color: #20186f;">Mobile penetration vary in States</a>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    var url_d;
+    $("#btn_search").click(function(e) {
+    e.preventDefault();
+    var myNode = document.getElementById("showResults");
+    myNode.innerHTML = '';
+    var value = $('#btn_search_text').val();
+    $.ajax({
+            type: "GET",
+            url: "/search/",
+            data :{
+                    'btn_search_text' : value               
+                },
+            success: function(res) {
+                itemData= res.files
+                // $.each(res, function() {
+                //     $.each(this, function(k, v) {
+                //        $("#showResults").append(
+                //            "<div class='myresult'>&nbsp;&nbsp;<img src='//ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png' alt=''> &nbsp;<b><a class='myresult_links' href='https://docs.google.com/document/d/"+v.id+"/edit' target='_blank'>"+v.name+"</a></b></div><br>"
+                //        )
+                //     });
+                // });
+                if (itemData.length == 0){
+                    $("#showResults").append('<p align="center">Nothing found....</p>');
+                }else{
+                     for(var i =0;i <= itemData.length-1;i++)
+                    {
+                        var item = itemData[i];
+                        $("#showResults").append(
+                            "<div class='myresult'>&nbsp;&nbsp;<img src='//ssl.gstatic.com/docs/doclist/images/mediatype/icon_3_pdf_x16.png' alt=''> &nbsp;<b><a class='myresult_links' href='https://drive.google.com/open?id="+item.description+"' target='_blank'>"+item.name+"</a></b></div><br>"
+                        )
+                    }
+                }
+            },
+            error: function(res) {
+                alert('error');
+            }
+        });
+    });
+</script>
+{% endblock %}
